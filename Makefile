@@ -4,26 +4,23 @@ CL65=	cc65/bin/cl65
 COPTS=	-t c64 -O -Or -Oi -Os --cpu 65c02
 LOPTS=	
 
-FILES=		m65fdisk.prg 
+FILES=		example.prg 
 
-M65IDESOURCES=	fdisk.c \
-		fdisk_memory.c \
-		fdisk_screen.c \
-		fdisk_fat32.c \
-		fdisk_hal_mega65.c
+M65IDESOURCES=	main.c \
+		memory.c \
+		screen.c \
+		hal_mega65.c
 
-ASSFILES=	fdisk.s \
-		fdisk_memory.s \
-		fdisk_screen.s \
-		fdisk_fat32.s \
-		fdisk_hal_mega65.s \
+ASSFILES=	main.s \
+		memory.s \
+		screen.s \
+		hal_mega65.s \
 		charset.s
 
 HEADERS=	Makefile \
-		fdisk_memory.h \
-		fdisk_screen.h \
-		fdisk_fat32.h \
-		fdisk_hal.h \
+		memory.h \
+		screen.h \
+		hal.h \
 		ascii.h
 
 DATAFILES=	ascii8x8.bin
@@ -38,19 +35,19 @@ $(CC65):
 	git submodule update
 	(cd cc65 && make -j 8)
 
-ascii8x8.bin: ascii00-7f.png pngprepare
-	./pngprepare charrom ascii00-7f.png ascii8x8.bin
+ascii8x8.bin: ascii00-7f.png tools/pngprepare
+	tools/pngprepare charrom ascii00-7f.png ascii8x8.bin
 
 asciih:	asciih.c
 	$(CC) -o asciih asciih.c
 ascii.h:	asciih
 	./asciih
 
-pngprepare:	pngprepare.c
-	$(CC) -I/usr/local/include -L/usr/local/lib -o pngprepare pngprepare.c -lpng
+tools/pngprepare:	tools/pngprepare.c
+	$(CC) -I/usr/local/include -L/usr/local/lib -o tools/pngprepare tools/pngprepare.c -lpng
 
-m65fdisk.prg:	$(ASSFILES) $(DATAFILES) $(CL65)
-	$(CL65) $(COPTS) $(LOPTS) -vm -m m65fdisk.map -o m65fdisk.prg $(ASSFILES)
+example.prg:	$(ASSFILES) $(DATAFILES) $(CL65)
+	$(CL65) $(COPTS) $(LOPTS) -vm -m example.map -o example.prg $(ASSFILES)
 
 clean:
 	rm -f $(FILES)
