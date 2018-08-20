@@ -59,7 +59,7 @@ unsigned char lpeek(long address)
   dmalist.command=0x00; // copy
   dmalist.count=1;
   dmalist.source_addr=address&0xffff;
-  dmalist.source_bank=(address>>16)&0x7f;
+  dmalist.source_bank=(address>>16)&0x0f;
   dmalist.dest_addr=(unsigned int)&dma_byte;
   dmalist.dest_bank=0;
 
@@ -84,7 +84,7 @@ void lpoke(long address, unsigned char value)
   dmalist.source_addr=(unsigned int)&dma_byte;
   dmalist.source_bank=0;
   dmalist.dest_addr=address&0xffff;
-  dmalist.dest_bank=(address>>16)&0x7f;
+  dmalist.dest_bank=(address>>16)&0x0f;
 
   do_dma(); 
   return;
@@ -131,7 +131,7 @@ void lfill(long destination_address, unsigned char value,
   dmalist.count=count;
   dmalist.source_addr=value;
   dmalist.dest_addr=destination_address&0xffff;
-  dmalist.dest_bank=(destination_address>>16)&0x7f;
+  dmalist.dest_bank=(destination_address>>16)&0x0f;
   if (destination_address>=0xd000 && destination_address<0xe000)
     dmalist.dest_bank|=0x80;
 
